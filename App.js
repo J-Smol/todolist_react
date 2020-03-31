@@ -12,10 +12,42 @@ class App extends Component {
     }
   }
   handleChange = id => {
-    const index = this.state.todoItems.map(item => item.id).indexOf(id)
+    let index = this.state.todoItems.map(item => item.id).indexOf(id);
+    if (this.state.todoItems[index].completed === false) {
+      this.setState( state => {
+        let {todoItems} = state;
+        todoItems[index].completed = true;
+        return todoItems;
+      });
+    } else {
+      this.setState( state => {
+        let {todoItems} = state;
+        todoItems[index].completed = false;
+        return todoItems;
+      });
+    }
+  }
+  deleteTask = id => {
+    let index = this.state.todoItems.map(item => item.id).indexOf(id);
+    const todoItems = this.state.todoItems;
+    todoItems.splice(index, 1);
     this.setState( state => {
       let {todoItems} = state;
-      todoItems[index].completed = true;
+      return todoItems;
+    });
+  }
+  addTask = () => {
+    const val = document.getElementById('newTask').value;
+    document.getElementById('newTask').value = "";
+    const todoItems = this.state.todoItems;
+    let newTask = {
+      id : todoItems.length,
+      description : val,
+      completed : false
+    }
+    todoItems.push(newTask);
+    this.setState( state => {
+      let {todoItems} = state;
       return todoItems;
     });
   }
@@ -30,6 +62,7 @@ class App extends Component {
           description={item.description}
           completed={item.completed}
           handleChange={() => { this.handleChange(item.id) }}
+          deleteTask={() => { this.deleteTask(item.id) }}
         />
       )
     }) 
@@ -38,6 +71,8 @@ class App extends Component {
       <div className="App">
         <h1 className="title">Планы на день</h1>
         {finalTasks}
+        <input type="text" id="newTask"/>
+        <button onClick={this.addTask}>Добавить задачу</button>
       </div>
     );
   }
