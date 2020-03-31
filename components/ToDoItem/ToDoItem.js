@@ -22,6 +22,7 @@ const ToDoItem = props => {
                     {props.description}
                 </p>
             </div>
+            <button onClick={props.deleteTask}>X</button>
         </div>
     )
 }
